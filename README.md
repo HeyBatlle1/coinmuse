@@ -27,7 +27,7 @@ Installation
 To run this project locally, follow these steps:
 Clone the repository:
 bash
-git clone https://github.com/HeyBattle1/coinscribe.git
+git clone https://github.com/HeyBattle1/coinmuse.git
 cd crypto-intro-web-app
 Install dependencies:
 bash
