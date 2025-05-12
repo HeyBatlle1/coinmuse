@@ -41,7 +41,7 @@ NODE_ENV=development
 Run the application:
 bash
 npm start
-The app will be available at http://localhost:3000.
+The app will be available at https://coinmuse.tech
 Usage
 Explore the Technology Section: Learn about the basics of blockchain and crypto technology.  
 Discover Cryptocurrencies: Browse the top 5 stablecoins and 5 popular coins, complete with descriptions and favicons.  
@@ -75,6 +75,6 @@ License
 This project is licensed under the MIT License. See the LICENSE file for details.
 Contact
 For questions or feedback, feel free to reach out:
-Email: bburton@hesperides.info 
+Email: bradleeb@hesperides.info 
 GitHub: HeyBattle1  
-X: @rcsanalytic
+X: @rcsanalytics
