@@ -59,27 +59,21 @@ export const ChatBot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Updated prompt to ask for suggestions
-      const prompt = `You are a friendly crypto expert helping beginners understand cryptocurrency.
-                     Please explain in simple terms: ${userMessage}
-                     Keep your response concise and easy to understand.
-                     After your explanation, provide a list of 2-3 relevant follow-up questions a beginner might ask, formatted like this:
-                     Suggestions:
-                     1. Follow-up question 1?
-                     2. Follow-up question 2?
-                     3. Follow-up question 3?`;
-
-      const rawText = await getOpenRouterResponse(prompt);
+      const rawText = await getOpenRouterResponse(userMessage);
+      
+      if (rawText.includes("Sorry, I couldn't generate")) {
+        throw new Error("API Error");
+      }
       
       const mainContent = stripSuggestions(rawText);
       const suggestions = parseSuggestions(rawText);
 
       setMessages(prev => [...prev, { role: 'bot', content: mainContent, suggestions }]);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
         role: 'bot', 
-        content: 'Sorry, I encountered an error. Please try again later.' 
+        content: 'The AI service is currently experiencing issues. Please try again in a moment.' 
       }]);
     } finally {
       setIsLoading(false);
