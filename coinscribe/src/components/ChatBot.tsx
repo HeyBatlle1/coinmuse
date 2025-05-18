@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react'; // Added Loader2
 import { motion } from 'framer-motion';
-import { getOpenRouterResponse } from '../services/gemini';
+import { getOpenRouterResponse } from '../services/openRouter';
 
 // Removed GoogleGenerativeAI import and initialization
 
