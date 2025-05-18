@@ -59,21 +59,30 @@ export const ChatBot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const rawText = await getOpenRouterResponse(userMessage);
-      
-      if (rawText.includes("Sorry, I couldn't generate")) {
-        throw new Error("API Error");
-      }
-      
-      const mainContent = stripSuggestions(rawText);
-      const suggestions = parseSuggestions(rawText);
+      const response = await getOpenRouterResponse(userMessage);
+      const mainContent = stripSuggestions(response);
+      const suggestions = parseSuggestions(response);
 
-      setMessages(prev => [...prev, { role: 'bot', content: mainContent, suggestions }]);
-    } catch (error) {
-      console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
         role: 'bot', 
-        content: 'The AI service is currently experiencing issues. Please try again in a moment.' 
+        content: mainContent, 
+        suggestions
+      }]);
+    } catch (error: any) {
+      console.error('ChatBot Error:', error);
+      let errorMessage = 'An error occurred. Please try again.';
+      
+      if (error.response?.status === 401) {
+        errorMessage = 'Authentication error. Please check the API key.';
+      } else if (error.response?.status === 429) {
+        errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
+      } else if (error.message.includes('No content')) {
+        errorMessage = 'The AI service returned an empty response. Please try again.';
+      }
+      
+      setMessages(prev => [...prev, { 
+        role: 'bot',
+        content: errorMessage
       }]);
     } finally {
       setIsLoading(false);
