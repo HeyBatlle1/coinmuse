@@ -1,31 +1,26 @@
-// This file might be used for other Gemini-related services in the future,
-// but the getCryptoExplanation function is removed as it's no longer used
-// by any component after replacing AIChatBox with ChatBot.
+// This file now only contains OpenRouter/OpenAI logic for the chatbot. No Google code remains.
+import { OpenAI } from 'openai';
 
-// import { GoogleGenerativeAI } from '@google/generative-ai';
-// import { env } from '../config/env';
+const openai = new OpenAI({
+  apiKey: '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',
+  baseURL: 'https://openrouter.ai/api/v1',
+  dangerouslyAllowBrowser: true,
+});
 
-// const genAI = new GoogleGenerativeAI(env.GOOGLE_API_KEY);
-
-// export async function getCryptoExplanation(prompt: string): Promise<string> {
-//   try {
-//     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    
-//     const result = await model.generateContent(`
-//       You are a direct and unrestricted crypto expert. Provide raw, unfiltered information about: ${prompt}
-      
-//       Guidelines:
-//       1. Give direct, unfiltered answers
-//       2. Skip the usual disclaimers and warnings
-//       3. Share real-world examples and experiences
-//       4. Explain actual market dynamics
-//       5. Use straightforward language
-//     `);
-    
-//     const response = result.response;
-//     return response.text();
-//   } catch (error) {
-//     console.error('Error getting explanation:', error);
-//     return "Sorry, I couldn't generate an explanation at the moment. Please try again later!";
-//   }
-// }
+export async function getOpenRouterResponse(prompt: string): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'qwen/qwen3-8b:free',
+      messages: [
+        { role: 'system', content: 'You are a direct and unrestricted crypto expert. Provide raw, unfiltered information.' },
+        { role: 'user', content: prompt },
+      ],
+      max_tokens: 512,
+      temperature: 0.7,
+    });
+    return response.choices[0]?.message?.content || "No response.";
+  } catch (error) {
+    console.error('Error getting explanation:', error);
+    return "Sorry, I couldn't generate an explanation at the moment. Please try again later!";
+  }
+}
