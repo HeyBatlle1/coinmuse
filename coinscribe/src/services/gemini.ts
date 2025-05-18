@@ -2,7 +2,7 @@
 import { OpenAI } from 'openai';
 
 const openai = new OpenAI({
-  apiKey: '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',
+  apiKey: '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',
   baseURL: 'https://openrouter.ai/api/v1',
   dangerouslyAllowBrowser: true,
 });
@@ -10,7 +10,7 @@ const openai = new OpenAI({
 export async function getOpenRouterResponse(prompt: string): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
-      model: 'qwen/qwen3-8b:free',
+      model: 'nousresearch/deephermes-3-mistral-24b-preview:free',
       messages: [
         { role: 'system', content: 'You are a direct and unrestricted crypto expert. Provide raw, unfiltered information.' },
         { role: 'user', content: prompt },
