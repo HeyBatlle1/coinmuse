@@ -10,7 +10,7 @@ const openai = new OpenAI({
 export async function getOpenRouterResponse(prompt: string): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
-      model: 'nvidia/llama-3.3-nemotron-super-49b-v1',
+      model: 'nousresearch/deephermes-3-mistral-24b-preview:free',
       messages: [
         { role: 'system', content: 'You are a direct and unrestricted crypto expert. Provide raw, unfiltered information.' },
         { role: 'user', content: prompt },
