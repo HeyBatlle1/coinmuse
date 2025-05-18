@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2 } from 'lucide-react'; // Added Loader2
+import { Send, Bot, User, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getOpenRouterResponse } from '../services/openRouter';
 
-// Removed GoogleGenerativeAI import and initialization
-
 interface Message {
-  role: 'user' | 'bot';
+  role: 'user' | 'assistant';
   content: string;
-  suggestions?: string[]; // Add suggestions field
+  suggestions?: string[];
 }
 
 // Function to parse suggestions from bot response
@@ -64,25 +62,15 @@ export const ChatBot: React.FC = () => {
       const suggestions = parseSuggestions(response);
 
       setMessages(prev => [...prev, { 
-        role: 'bot', 
+        role: 'assistant', 
         content: mainContent, 
         suggestions
       }]);
     } catch (error: any) {
       console.error('ChatBot Error:', error);
-      let errorMessage = 'An error occurred. Please try again.';
-      
-      if (error.response?.status === 401) {
-        errorMessage = 'Authentication error. Please check the API key.';
-      } else if (error.response?.status === 429) {
-        errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
-      } else if (error.message.includes('No content')) {
-        errorMessage = 'The AI service returned an empty response. Please try again.';
-      }
-      
       setMessages(prev => [...prev, { 
-        role: 'bot',
-        content: errorMessage
+        role: 'assistant',
+        content: error.message || 'Failed to get a response. Please try again.'
       }]);
     } finally {
       setIsLoading(false);
@@ -107,12 +95,11 @@ export const ChatBot: React.FC = () => {
             transition={{ duration: 0.3 }}
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
-            <div
-              className={`flex items-start max-w-2xl w-full ${
-                message.role === 'user' 
-                  ? 'flex-row-reverse' 
-                  : 'flex-row'
-              }`}
+            <div className={`flex items-start max-w-2xl w-full ${
+              message.role === 'user' 
+                ? 'flex-row-reverse' 
+                : 'flex-row'
+            }`}
             >
               {/* Icons */}
               <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
@@ -136,7 +123,7 @@ export const ChatBot: React.FC = () => {
               >
                 <p className="whitespace-pre-wrap">{message.content}</p> 
                 {/* Render Suggestion Buttons */}
-                {message.role === 'bot' && message.suggestions && message.suggestions.length > 0 && (
+                {message.role === 'assistant' && message.suggestions && message.suggestions.length > 0 && (
                   <div className="mt-4 pt-4 border-t border-gray-600 flex flex-wrap gap-3">
                     {message.suggestions.map((suggestion, i) => (
                       <button
